@@ -7,7 +7,7 @@ const Googleprovider = new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK
 
 
-},function(access, refresh, profile, cb){
+},async function (access, refresh, profile, cb){
     cb(null,profile)
 })
 module.exports = Googleprovider
