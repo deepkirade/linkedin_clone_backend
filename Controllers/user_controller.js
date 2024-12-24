@@ -16,7 +16,7 @@ const home = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { name, email, profile, password } = req.body
+        const { name, email, password, role, skills } = req.body
         if (!email || !password || !name) {
             return res.status(400).json({
                 message: "somethig is missing",
@@ -30,12 +30,12 @@ const register = async (req, res) => {
         saltround = 10;
         const hash_password = await bcrypt.hash(password, saltround);
         // await User.deleteMany({})
-        await User.create({ name, email, password: hash_password });
+        user = await User.create({ name, email, password: hash_password, role, skills: skills.split(",") });
         res.status(201).json({
             message: "registration succesfull",
-            success: true
+            success: true,
+            user
         });
-
     } catch (error) {
         res.status(400).send({ Message: "page not found" })
         console.log(error);
@@ -113,39 +113,42 @@ const failed = (req, res) => {
 
 const success = async (req, res) => {
     const token = req.query
-    res.send({ message: "success to login with google", token1: token })
+    res.cookie(
+        "token", token, { maxAge: 1 * 24 * 60 * 60 * 1000 }).send({ message: "success to login with google", token1: token })
 }
 
 const updateuser = async (req, res) => {
     try {
-        user1 = await User.findById(req.params.id) 
-        const { name,email,password } = req.body
-        saltround = 10;
-        const hash_password = await bcrypt.hash(password, saltround);
-        if(password)user1.password = hash_password          
-        if(email)user1.email = email
-        if(name)user1.name = name
+        user1 = await User.findById(req.user.id)
+        const { name, email, password,skills } = req.body
+      
+        if (password){  const hash_password = await bcrypt.hash(password, 10);
+             user1.password = hash_password }
+        if (email) user1.email = email
+        if (name) user1.name = name
+        if (skills) user1.skills = skills.split(",")
         await user1.save()
         console.log(user1)
-        res.send({user1})
+        res.send({ user1 })
 
     } catch (error) {
-        res.status(404).send({message:"server not respond"})
+        res.status(404).send({ error: error.message })
     }
 }
 
-const finduser = async (req,res) => {
+const finduser = async (req, res) => {
     try {
-        const {name} = req.body
-        user1 = await User.find({name})
-        if(user1==""){
-             return res.send("user not found")
+        const { name } = req.body
+        user1 = await User.find({ name })
+        if (user1 == "") {
+            return res.send("user not found")
         }
         res.send(user1)
-     
 
-    } catch (error) { res.send("page not found")
-        
+
+    } catch (error) {
+        res.send("page not found")
+
     }
 }
 
@@ -157,4 +160,4 @@ const finduser = async (req,res) => {
 
 
 
-module.exports = { home, register, login, loginwithgooglecallback, success, failed, updateuser,  finduser }
+module.exports = { home, register, login, loginwithgooglecallback, success, failed, updateuser, finduser }

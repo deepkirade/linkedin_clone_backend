@@ -13,7 +13,7 @@ router.route("/googlelogin").get(passport.passportconfig.authenticate('google',{
 router.route("/googlelogin/callback").get(passport.passportconfig.authenticate("google",{failureRedirect:'http://localhost:8000/api/v1/user/failed'}), authcontroller.loginwithgooglecallback);
 router.route("/failed").get(authcontroller.failed)
 router.route("/success").get(authcontroller.success)
-router.route("/updateuser/:id").put(authorization, authcontroller.updateuser)
+router.route("/updateuser").put(authorization, authcontroller.updateuser)
 router.route("/finduser").post( authcontroller.finduser)
 
 

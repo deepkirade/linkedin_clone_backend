@@ -2,7 +2,8 @@
 const jwt = require("jsonwebtoken");
 
 const ensureauthenticated=(req,res,next)=>{
-   const token = req.headers['authorization'] ;
+   // const token = req.headers['authorization'] ;
+   const token = req.cookies.token;
    if (!token){
     return res.status(403).json({message:" please Login first ,jwt token is required"})
    }

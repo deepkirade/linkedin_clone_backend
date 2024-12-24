@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <H1>Linkedin   App</H1>
+  <input type="text" id="message" placeholder="Enter UserId">
+  <button id="sendbtn" >Send</button><br><br>
+  <input type="text" id="recieverid" placeholder="Enter reciverid">
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+<script>
+
+  const socket = io("http://localhost:8000/",{
+      query: {
+        userid: "6750b4a7a08980e56a79a3b9"
+      }
+      
+    })
+    socket.on('user',(a)=>{console.log("user connected : ", a)})
+
+    const sendbtn = document.getElementById('sendbtn')
+    const messageinput = document.getElementById('message')
+    const Rid= document.getElementById('recieverid')
+
+
+ 
+    socket.on("message", (m)=> console.log("New message :",m))
+
+
+
+    sendbtn.addEventListener('click',e=>{
+      const user = messageinput.value
+      const reciver = Rid.value
+      console.log(user)
+      socket.emit('roomid',{user,reciver})
+    })
+
+    socket.on('ReceiverSocketId',(a)=>{console.log("user message", a)})
+
+  
+  
+
+</script>
+
+ 
+
+
+
+</body>
+
+</html>
