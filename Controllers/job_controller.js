@@ -87,7 +87,7 @@ const recommendedjob = async (req,res)=>{
         if(recommendedjobs ==""){return res.send("No found recommeded job")}
         res.status(200).send(recommendedjobs)
 
-    } catch (err) {
+    } catch (err) { 
         res.status(400).json({ error: err.message }); 
     }
 }

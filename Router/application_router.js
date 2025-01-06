@@ -10,7 +10,7 @@ const application_controller = require("../Controllers/application_controller.js
 
 
 router.route("/applyjob/:id").get(authrization, application_controller.applyjob );
-router.route("/getAppliedjobs/:id").get(authrization, application_controller. getAppliedjobs );
+router.route("/getAppliedjobs").get(authrization, application_controller. getAppliedjobs );
 router.route("/getapplicants/:id").get(authrization, application_controller. getapplicants );
 
 

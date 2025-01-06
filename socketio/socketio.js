@@ -19,17 +19,12 @@ const users = {}
 io.on("connection", async (socket) => {
     console.log("client connected", socket.id)
     const userid = socket.handshake.query.userid
-    io.emit("user", socket.id)
+    io.emit("user", {userconnected: socket.id})
     
-
-    //   if (userid){
-    //    await User.findOneAndUpdate(
-    //         { _id:userid },
-    //         { status: "Online", lastSeen: new Date() }),
-    //         users[userid] = socket.id
-
-    //     console.log("active users",socket.id,userid )
-    //   } 
+socket.on('message', function(a){
+console.log(a)
+io.emit('message',a)
+})
 
     socket.on('roomid', async (m) => {
         console.log("User Data :", m)
@@ -46,7 +41,7 @@ io.on("connection", async (socket) => {
             socket.on("disconnect", async () => {
                 await User.findOneAndUpdate(
                     { _id: user},
-                    { status: "Offline", lastSeen: new Date() }),
+                    { status: "Offline", lastSeen: new Date() }), 
         
                     console.log("User disconnected",user)
         })
