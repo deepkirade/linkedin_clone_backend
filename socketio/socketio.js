@@ -3,6 +3,7 @@ const app = express()
 const Server = require("socket.io")
 const http = require("http")
 const User = require("../models/user-model")
+const { Socket } = require("dgram")
 
 
 const server = http.createServer(app)
@@ -15,19 +16,27 @@ const io = new Server(server, {
 const getReceiverSocketId = (receiverId) => {
     return users[receiverId];
 }
+
+
+
 const users = {}
+
 io.on("connection", async (socket) => {
     console.log("client connected", socket.id)
     const userid = socket.handshake.query.userid
     io.emit("user", {userconnected: socket.id})
     
-socket.on('message', function(a){
-console.log(a)
-io.emit('message',a)
+socket.on('message', ({room, message})=>{
+console.log({room,message})
+socket.join(room)
+if(message){
+    io.to(room).emit('Receive_message', message)
+}
+
 })
 
     socket.on('roomid', async (m) => {
-        console.log("User Data :", m)
+        console.log("User Data :", m) 
 
         const { reciver, user } = m
         if (user) {
